@@ -3,10 +3,9 @@
 import pandas as pd
 from datetime import datetime
 
-# Caminho do arquivo
 caminho_arquivo = r"C:\Users\Wesley Ximenes\Downloads\relatorio fatura.xls" #'r' indica que é uma raw string, para evitar conflitos com barras invertidas.
 
-# Lê todas as tabelas do arquivo
+# Aloca as tabelas do arquivo na variável "tabelas"
 tabelas = pd.read_html(caminho_arquivo, decimal=",", thousands=".") #em html, pois o libre office tem esse formato, se não, usaria o read_excel
 
 # Seleciona a tabela correta (índice 1)
@@ -42,11 +41,11 @@ df['dias_passados'] = (hoje - df['dataentrada']).dt.days #Cria uma nova coluna '
 vencidos = df[df['dias_passados'] > 30].sort_values(by='dias_passados', ascending=False) #Coloca os vencidos em ordem decrescente (ascending=false)
 
 if not vencidos.empty: #Se houver veículos vencidos: Exibe os dados filtrados no terminal e salva apenas as colunas relevantes num excel.
-    print("⚠️ Veículos com data de entrada vencida há mais de 30 dias:")
+    print("Veículos com data de entrada vencida há mais de 30 dias:")
     print(vencidos[['placa', 'dataentrada', 'dias_passados']])
 
     colunas_desejadas = ['placa', 'dataentrada', 'dias_passados'] #Filtra apenas as colunas necessárias 
     vencidos[colunas_desejadas].to_excel("veiculos_vencidos.xlsx", index=False) #Salva os dados em um arquivo Excel com o openpyxl (biblioteca para trabalhar em arquivos excel)
 
-else: #Se não houver veículos vencidos, retorna a msg positiva.
-    print("✅ Nenhum veículo com data vencida encontrada.")
+else: #Se não houver veículos vencidos, ele retorna a msg positiva.
+    print("Nenhum veículo com data vencida encontrada.")
